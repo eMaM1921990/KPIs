@@ -1,0 +1,156 @@
+{% load campaign_tag %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales KPI</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar fixed-top navbar-expand-md navbar-dark bg-primary mb-3">
+
+</nav>
+<div class="container-fluid" id="main">
+    <div class="row row-offcanvas ">
+        <div class="col-md-12 col-lg-12 main">
+            <div>
+
+                <div class="btn-group" role="group" aria-label="Basic example" style="float: right">
+                    <a href="{% url 'KPISalesBoard' %}?period=TODAY" class="btn btn-secondary">Today</a>
+                    <a href="{% url 'KPISalesBoard' %}?period=YESTERDAY" class="btn btn-secondary">Yesterday</a>
+                    <a href="{% url 'KPISalesBoard' %}?period=THIS_MONTH" class="btn btn-secondary">This Month</a>
+                    <a href="{% url 'KPISalesBoard' %}?period=LAST_MONTH" class="btn btn-secondary">Last Month</a>
+                    <a href="{% url 'KPISalesBoard' %}?period=THIS_YEAR" class="btn btn-secondary">This Year</a>
+                    <a href="{% url 'KPISalesBoard' %}?period=LAST_YEAR" class="btn btn-secondary">Last Year</a>
+                </div>
+                <h1 class="display-4 d-none d-sm-block">
+                    Sales KPI Dashboard
+                </h1>
+
+
+            </div>
+
+
+            <div class="row placeholders mb-3">
+                <div class="col-6 col-sm-2 placeholder text-center">
+                    <img src="//placehold.it/200/dddddd/fff?text={{ emailsCount|default_if_none:'Zero' }}"
+                         class="mx-auto img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+                    <h1>Email</h1>
+                    <span class="text-muted">Sent</span>
+                </div>
+                <div class="col-6 col-sm-2 placeholder text-center">
+                    <img src="//placehold.it/200/e4e4e4/fff?text={{ homeClosedCount|default_if_none:'Zero' }}"
+                         class="mx-auto img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+                    <h1>Home</h1>
+                    <span class="text-muted">Closed</span>
+                </div>
+                <div class="col-6 col-sm-2 placeholder text-center">
+                    <img src="//placehold.it/200/d6d6d6/fff?text={{ homeWonCount|default_if_none:'Zero' }}"
+                         class="mx-auto img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+                    <h1>Home</h1>
+                    <span class="text-muted">Won</span>
+                </div>
+                <div class="col-6 col-sm-2 placeholder text-center">
+                    <img src="//placehold.it/200/e0e0e0/fff?text={{ callsCount|default_if_none:'Zero' }}"
+                         class="center-block img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+                    <h1>Call</h1>
+                    <span class="text-muted">count</span>
+                </div>
+
+                <div class="col-6 col-sm-2 placeholder text-center">
+                    <img src="//placehold.it/200/e0e0e0/fff?text={{ smsCount|default_if_none:'Zero' }}"
+                         class="center-block img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+
+                    <h1>Sms</h1>
+                    <span class="text-muted">count</span>
+                </div>
+            </div>
+
+            <div class="row col-lg-12">
+
+                <h2 class="display-4 d-none d-sm-block">
+                    Campaign details
+                </h2>
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <td>Campaing name</td>
+                        <td>Lead</td>
+                        <td>sent date</td>
+                        <td>Lead Response date</td>
+                        <td>Send Email Date</td>
+                        <td>Send Call</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for campaign in campaigns %}
+                        <tr>
+                            <td>{{ campaign.smagicinteract__Campaign__r.Name }} </td>
+                            <td>{{ campaign.smagicinteract__Lead__r.Name }}</td>
+                            <td>{{ campaign.smagicinteract__Sent_On__c}}</td>
+                            <td>{% get_lead_response_date campaign.smagicinteract__Campaign__c.Id  campaign.smagicinteract__Lead__c.Id  campaign.smagicinteract__Sent_On__c %}</td>
+                            <td>{% get_lead_email_sent campaign.smagicinteract__Lead__c.Email campaign.smagicinteract__Sent_On__c %}</td>
+                            <td>{% get_lead_call_sent campaign.smagicinteract__Lead__c.Phone campaign.smagicinteract__Sent_On__c  %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="row col-lg-12">
+
+                <h2 class="display-4 d-none d-sm-block">
+                    Campaign details
+                </h2>
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <td>Campaing name</td>
+                        <td>Lead</td>
+                        <td>sent date</td>
+                        <td>Lead Response date</td>
+                        <td>Send Email (Count)</td>
+                        <td>Send Call (Count)</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for campaign in campaigns %}
+                        <tr>
+                            <td>{{ campaign.smagicinteract__Campaign__r.Name }} </td>
+                            <td>{{ campaign.smagicinteract__Lead__r.Name }}</td>
+                            <td>{{ campaign.smagicinteract__Sent_On__c}}</td>
+                            <td>{% get_lead_response_date campaign.smagicinteract__Campaign__c.Id  campaign.smagicinteract__Lead__c.Id  campaign.smagicinteract__Sent_On__c %}</td>
+                            <td>{% get_lead_email_sent_count campaign.smagicinteract__Lead__c.Email campaign.smagicinteract__Sent_On__c %}</td>
+                            <td>{% get_lead_call_sent_count campaign.smagicinteract__Lead__c.Phone campaign.smagicinteract__Sent_On__c  %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>
+</body>
+</html>
